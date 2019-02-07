@@ -33,7 +33,6 @@ class PiResource(Resource):
     ERROR_MESSAGE = 'Failure'
     ERROR_STATUS_CODE = 400
 
-
     def post(self):
         args = self.parser.parse_args()
 
@@ -124,7 +123,7 @@ class TemperatureResource(PinResource):
         self.parser.add_argument('units', type=str, )
 
     def set_units(self, recvd_units, *args, **kwargs):
-        return self.DEFAULT_UNITS if recvd_units not in VALID_UNITS else recvd_units
+        return self.DEFAULT_UNITS if recvd_units not in self.VALID_UNITS else recvd_units
     
     def post_action(self, parser_args, *args, **kwargs):
         pin = parser_args['pin']
