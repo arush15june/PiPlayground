@@ -17,7 +17,10 @@ app.config['DEBUG'] = False
 app.secret_key = 'd4abb98d-5864-4e3b-a845-2c4969f3b9be'
 
 """ Enable CORS """
-cors = CORS(app, resources={r"/*": {"origins": "*"}})
+cors = CORS(app, 
+            resources={r"/*": {"origins": "*"}},
+            allow_headers=["Content-Type", "Authorization", "Access-Control-Allow-Credentials"]
+        )
 api = Api(app) # API Singleton
 
 """
@@ -31,7 +34,7 @@ class PiResource(Resource):
     parser = reqparse.RequestParser()
 
     ERROR_MESSAGE = 'Failure'
-    ERROR_STATUS_CODE = 400
+    ERROR_STATUS_CODE = 503
 
     def post(self):
         args = self.parser.parse_args()
@@ -69,31 +72,31 @@ class BlinkResource(PinResource):
         Blink an led on a pin for required seconds.
         POST Arguments:
             `pin`: pin to blink on. Default = 17
-            `seconds`: seconds to blink for. Default = 2s
+            `time`: seconds to blink for. Default = 2s
 
         Example:
-            /blink?pin=17&seconds=2
+            /blink?pin=17&time=2
     """    
     DEFAULT_PIN = 17 # GPIO17
     DEFAULT_BLINK_TIME = 2 # seconds
 
-    SUCCESS_MESSAGE = 'Blink successful on Pin {} for {} seconds'
+    SUCCESS_MESSAGE = 'Blink successful on GPIO{} for {} seconds'
     ERROR_MESSAGE = 'Blink Failed'
 
     def __init__(self, *args, **kwargs):
         super(BlinkResource, self).__init__(*args, **kwargs)
-        self.parser.add_argument('seconds', type=int, default=self.DEFAULT_BLINK_TIME)
+        self.parser.add_argument('time', type=int, default=self.DEFAULT_BLINK_TIME)
 
     def post_action(self, parser_args, *args, **kwargs):
         pin = parser_args['pin']
-        seconds = parser_args['seconds']
+        time = parser_args['time']
         try:
             """
                 blink function from helpers.py.
             """
-            blink(pin, seconds)
+            blink(pin, time)
             
-            response = {'message': self.SUCCESS_MESSAGE.format(pin, seconds)}
+            response = {'message': self.SUCCESS_MESSAGE.format(pin, time)}
 
             return response
         except:
@@ -161,7 +164,7 @@ class ServoResource(PinResource):
 
     DEFAULT_PIN = 14
 
-    SUCCESS_MESSAGE = 'Successfully moved Servo on Pin {} to {} position'
+    SUCCESS_MESSAGE = 'Successfully moved Servo on GPIO{} to {} position'
     ERROR_MESSAGE = 'Error Handling Servo'
 
     VALID_LOCATIONS = set(['min', 'mid', 'max'])
@@ -209,11 +212,11 @@ class BuzzerResource(PinResource):
 
     """
 
-    DEFAULT_PIN = 14
+    DEFAULT_PIN = 27
 
     DEFAULT_HIGH_TIME = 500 # ms
 
-    SUCCESS_MESSAGE = 'Played bitstream on buzzer at {}'
+    SUCCESS_MESSAGE = 'Played bitstream on buzzer at GPIO{}'
     ERROR_MESSAGE = 'Error playing bitstream'
 
     VALID_INPUT = set(['0', '1'])

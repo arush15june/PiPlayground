@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>PiPlayground</title>
+        <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans" rel="stylesheet">
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+        html,
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+        }
+        .control-box {
+            width:50%;
+            height:50%;
+        }
+        .loader {
+            font-size: 10px;
+            margin: 50px auto;
+            text-indent: -9999em;
+            width: 5em;
+            height: 5em;
+            border-radius: 50%;
+            background: #ffffff;
+            background: -moz-linear-gradient(left, #ffffff 10%, rgba(255, 255, 255, 0) 42%);
+            background: -webkit-linear-gradient(left, #ffffff 10%, rgba(255, 255, 255, 0) 42%);
+            background: -o-linear-gradient(left, #ffffff 10%, rgba(255, 255, 255, 0) 42%);
+            background: -ms-linear-gradient(left, #ffffff 10%, rgba(255, 255, 255, 0) 42%);
+            background: linear-gradient(to right, #ffffff 10%, rgba(255, 255, 255, 0) 42%);
+            position: relative;
+            -webkit-animation: load3 1.4s infinite linear;
+            animation: load3 1.4s infinite linear;
+            -webkit-transform: translateZ(0);
+            -ms-transform: translateZ(0);
+            transform: translateZ(0);
+        }
+        .loader:before {
+            width: 50%;
+            height: 50%;
+            background: #ffffff;
+            border-radius: 100% 0 0 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            content: '';
+        }
+        .loader:after {
+            background: #343a40;
+            width: 75%;
+            height: 75%;
+            border-radius: 50%;
+            content: '';
+            margin: auto;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+        }
+        @-webkit-keyframes load3 {
+            0% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+            }
+            @keyframes load3 {
+            0% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+        </style>
+    </head>
+<body class='bg-light'>
+
+    
+    <div style='overflow-x:hidden' class='text-center pt-2'>
+        <h1 class='font-weight-bold'>PiPlayground</h1>
+    </div>
+
+    <div class='row mr-3 ml-3'>
+        <div class='col m-3'>
+            <div class="card border-secondary">
+                <h4 class="card-header text-center font-weight-bold">Blink</h4> 
+                <div class="card-body">
+                    <h5 class="card-title">Blink an LED.</h5>
+                    <form id='blinkForm'>
+                        <div class="form-group">
+                            <label for="pin">Pin</label>
+                            <input type="number" class="form-control" value=17 id="blinkPinInput" name='pin'>
+                        </div>
+                        <div class="form-group">
+                            <label for="time">Blink For (seconds)</label>
+                            <input type="number" class="form-control" value=2 id="blinkTimeInput" name='time'>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Blink</button>
+                    </form>
+                    
+                    <div class="card mt-2 bg-dark text-light" style='min-height:150px'>
+                        <div class="card-body mx-auto my-auto" id='blinkOutput'>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        
+        <div class='col m-3'>
+            <div class="card border-secondary">
+                <h4 class="card-header text-center font-weight-bold">Temperature</h4>
+                <div class="card-body">
+                    <h5 class="card-title">Get the current temperature.</h5>
+
+                    <form id='tempForm'>
+                        <div class="form-group">
+                            <label for="pin">Pin</label>
+                            <input type="number" class="form-control" value=24 id="tempPinInput" name='pin'>
+                        </div>
+                        <div class="form-group">
+                            <label for="units">Units</label>
+                            <select id='tempUnitInput' name='units' class="custom-select">
+                                <option selected value="C">Celsius</option>
+                                <option value="F">Farenheit</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Get Temperature</button>
+                    </form>
+                    
+                    <div class="card mt-2 bg-dark text-light" style='min-height:150px'>
+                        <div class="card-body mx-auto my-auto" id='tempOutput'>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class='row mr-3 ml-3'>
+        <div class='col m-3'>
+            <div class="card border-secondary">
+                <h4 class="card-header text-center font-weight-bold">Servo</h4>
+                <div class="card-body">
+                    <h5 class="card-title">Move a Servo.</h5>
+
+                    <form id='servoForm'>
+                        <div class="form-group">
+                            <label for="pin">Pin</label>
+                            <input type="number" class="form-control" value=14 id="servoPinInput" name='pin'>
+                        </div>
+                        <div class="form-group">
+                            <label for="location">Location</label>
+                            <select id='servoLocationInput' name='location' class="custom-select">
+                                <option selected value="min">Minimum</option>
+                                <option value="mid">Middle</option>
+                                <option value="max">Maximum</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Move</button>
+                    </form>
+                    
+                    <div class="card mt-2 bg-dark text-light" style='min-height:150px'>
+                        <div class="card-body mx-auto my-auto" id='servoOutput'>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class='col m-3'>
+            <div class="card border-secondary">
+                <h4 class="card-header text-center font-weight-bold">Buzzer</h4>
+                <div class="card-body">
+                    <h5 class="card-title">Jam to 2 bit music.</h5>
+
+                    <form id='buzzForm'>
+                        <div class="form-group">
+                            <label for="pin">Pin</label>
+                            <input type="number" class="form-control" id="buzzPinInput" value=27 name='pin'>
+                        </div>
+                        <div class="form-group">
+                            <label for="stream">Bitstream (beep boop)</label>
+                            <input type="text" class="form-control" id="buzzStreamInput" value='10011101' name='stream'>
+                        </div>
+                        <div class="form-group">
+                            <label for="high_time">Time To Beep For (ms)</label>
+                            <input type="number" class="form-control" id="buzzHighTimeInput" value=500 name='high_time'>
+                        </div>
+                        <button type="submit" class="btn btn-primary">BeepBoop</button>
+                    </form>
+                    
+                    <div class="card mt-2 bg-dark text-light" style='min-height:150px'>
+                        <div class="card-body mx-auto my-auto" id='buzzOutput'>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <script>
+    API_URL = 'http://localhost:5000'
+
+    BLINK_URI = '/blink'
+    TEMP_URI = '/temperature'
+    SERVO_URI = '/servo'
+    BUZZ_URI = '/buzzer'
+
+    // Helper
+    const fetchJSON = async function(uri, method, data) {
+        const res = await fetch(API_URL+uri, {
+            method : method,
+            body: JSON.stringify(data),
+            mode: "cors",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        })
+
+        if(!res.ok) {
+            throw new Error(res.status);
+            return;
+        }
+        
+        let resp_data = await res.json() 
+        return resp_data
+    }
+
+    const enableLoader = function(id) {
+        outputRenderer(id, `<div class="loader"></div>`)
+    }
+    
+    const disableLoader = function(id) {
+        outputRenderer(id, ``)
+    }
+
+    const outputRenderer = function(id, output) {
+        document.querySelector(id).innerHTML = output
+    }
+
+    // Output Renderers
+    const blinkOutput = function(output) {
+        let id = '#blinkOutput'
+        outputRenderer(id, output)
+    }
+    const tempOutput = function(output) {
+        let id = '#tempOutput'
+        outputRenderer(id, output)
+    }
+    const servoOutput = function(output) {
+        let id = '#servoOutput'
+        outputRenderer(id, output)
+    }
+    const buzzOutput = function(output) {
+        let id = '#buzzOutput'
+        outputRenderer(id, output)
+    }
+    
+    // Requests
+    const blinkRequest = async function(pin, time) {
+        let data = {
+            'pin': pin,
+            'time': time
+        }
+        
+        data = await fetchJSON(BLINK_URI, 'POST', data)
+        return data
+    }
+
+    const tempRequest = async function(pin, units) {
+        let data = {
+            'pin': pin,
+            'units': units
+        }
+        
+        data = await fetchJSON(TEMP_URI, 'POST', data)
+        return data
+    }
+
+    const servoRequest = async function(pin, location) {
+        let data = {
+            'pin': pin,
+            'location': location
+        }
+        
+        data = await fetchJSON(SERVO_URI, 'POST', data)
+        return data
+    }
+
+    const buzzRequest = async function(pin, stream, high_time) {
+        let data = {
+            'pin': pin,
+            'stream': stream,
+            'high_time': high_time
+        }
+        
+        data = await fetchJSON(BUZZ_URI, 'POST', data)
+        return data
+    }
+    
+    // Request Handlers
+    const blinkRequestHandler = async function(pin, time) {
+        enableLoader('#blinkOutput')
+        let api_response = await blinkRequest(pin, time)
+        disableLoader('#blinkOutput')
+
+        let message = api_response.message
+        let render_html = `<span class='font-weight-bold'>${message}</span>` 
+        blinkOutput(render_html)
+    }
+    
+    const tempRequestHandler = async function(pin, units) {
+        enableLoader('#tempOutput')
+        let api_response = await tempRequest(pin, units)
+        disableLoader('#tempOutput')
+
+        let temperature = api_response.temperature
+        let render_html = `<span class='font-weight-bold'>Temperature: ${temperature} ${units}</span>` 
+        tempOutput(render_html)
+    }
+    
+    const servoRequestHandler = async function(pin, location) {
+        enableLoader('#servoOutput')
+        let api_response = await servoRequest(pin, location)
+        disableLoader('#servoOutput')
+
+        let message = api_response.message
+        let render_html = `<span class='font-weight-bold'>${message}</span>` 
+        servoOutput(render_html)
+    }
+
+    const buzzRequestHandler = async function(pin, stream, high_time) {
+        enableLoader('#buzzOutput')
+        let api_response = await buzzRequest(pin, stream, high_time)
+        disableLoader('#buzzOutput')
+
+        let message = api_response.message
+        let render_html = `<span class='font-weight-bold'>${message}</span>` 
+        buzzOutput(render_html)
+    }
+
+
+    // Form Handlers
+    const blinkFormHandler = async function(form) {
+        form.preventDefault()
+        let pin = form.target.pin.value
+        let time = form.target.time.value
+        
+        await blinkRequestHandler(pin, time)
+    }
+
+    const tempFormHandler = async function(form) {
+        form.preventDefault()
+        let pin = form.target.pin.value
+        let units = form.target.units.value
+        
+        await tempRequestHandler(pin, units)
+    }
+
+    const servoFormHandler = async function(form) {
+        form.preventDefault()
+        let pin = form.target.pin.value
+        let location = form.target.location.value
+        
+        await servoRequestHandler(pin, location)
+    }
+
+    const buzzFormHandler = async function(form) {
+        form.preventDefault()
+        let pin = form.target.pin.value
+        let stream = form.target.stream.value
+        let high_time = form.target.high_time.value
+
+        await buzzRequestHandler(pin, stream, high_time)
+    }
+
+    // Set Form Handlers
+    const blinkForm = document.querySelector('#blinkForm')
+    const tempForm = document.querySelector('#tempForm')
+    const servoForm = document.querySelector('#servoForm')
+    const buzzForm = document.querySelector('#buzzForm')
+
+    blinkForm.onsubmit = blinkFormHandler
+    tempForm.onsubmit = tempFormHandler
+    servoForm.onsubmit = servoFormHandler
+    buzzForm.onsubmit = buzzFormHandler
+    </script>
+</body>
+</html>
