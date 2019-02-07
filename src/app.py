@@ -37,21 +37,21 @@ class PiResource(Resource):
     def post(self):
         args = self.parser.parse_args()
 
-        return post_action(args)
+        return self.post_action(args)
 
     def post_action(self, args):
         raise NotImplementedError()
 
     def error_response(self, *args, **kwargs):
-        response_json = {
+        response = {
             'message': self.ERROR_MESSAGE
         }
 
         data = kwargs.get('data')
         if data is not None:
-            response_json.update(data)
+            response.update(data)
         
-        return make_response(response_json, status=self.ERROR_MESSAGE)
+        return response, self.ERROR_STATUS_CODE
 
 class PinResource(PiResource):
     """
@@ -94,9 +94,9 @@ class BlinkResource(PinResource):
             """
             blink(pin, seconds)
             
-            return make_response(
-                {'message': self.SUCCESS_MESSAGE.format(pin, seconds)}
-            )
+            response = {'message': self.SUCCESS_MESSAGE.format(pin, seconds)}
+
+            return response
         except:
             return self.error_response()
         
@@ -117,7 +117,7 @@ class TemperatureResource(PinResource):
 
     ERROR_MESSAGE = 'Error retrieving temperature'
 
-    VALID_UNITS = ['C', 'F']
+    VALID_UNITS = set(['C', 'F'])
 
     def __init__(self, *args, **kwargs):
         super(TemperatureResource, self).__init__(*args, **kwargs)
@@ -134,10 +134,12 @@ class TemperatureResource(PinResource):
                 read_temperature function from helpers.py
             """
             temperature = read_temperature(pin, units)
-            return make_response({
+            response = {
                 'temperature': temperature,
                 'units': units
-            })
+            }
+
+            return response
         except:
             return self.error_response()
 
@@ -163,7 +165,7 @@ class ServoResource(PinResource):
     SUCCESS_MESSAGE = 'Successfully moved Servo on Pin {} to {} position'
     ERROR_MESSAGE = 'Error Handling Servo'
 
-    VALID_LOCATIONS = ['min', 'mid', 'max']
+    VALID_LOCATIONS = set(['min', 'mid', 'max'])
 
     def __init__(self, *args, **kwargs):
         super(ServoResource, self).__init__(*args, **kwargs)
@@ -184,11 +186,15 @@ class ServoResource(PinResource):
                 move_servo function from helpers.py
             """
             move_servo(pin, location)
-            return make_response(
-                {'message': self.SUCCESS_MESSAGE.format(pin, location )}
-            )
+
+            response = {'message': self.SUCCESS_MESSAGE.format(pin, location )}
+
+            return response
         except:
             return self.error_response()
+
+class InvalidStreamError(Exception):
+    pass
 
 class BuzzerResource(PinResource):
     """
@@ -211,22 +217,33 @@ class BuzzerResource(PinResource):
     SUCCESS_MESSAGE = 'Played bitstream on buzzer at {}'
     ERROR_MESSAGE = 'Error playing bitstream'
 
+    VALID_INPUT = set(['0', '1'])
+
     def __init__(self, *args, **kwargs):
         super(BuzzerResource, self).__init__(*args, **kwargs)
         self.parser.add_argument('stream', type=str, required=True)
         self.parser.add_argument('high_time', type=int, default=self.DEFAULT_HIGH_TIME)
         
+    def set_stream(self, stream):
+        validity_list = [char in self.VALID_INPUT for char in stream]
+        if False in validity_list:
+            raise InvalidStreamError()
+        else:
+            return stream
+        
+        
     def post_action(self, parser_args, *args, **kwargs):
         pin = parser_args.get('pin')
         high_time = parser_args.get('high_time')
         try:
+            stream = self.set_stream(parser_args['stream'])
             """
                 play_buzzer function from helpers.py
             """
-            move_servo(pin, location)
-            return make_response(
-                {'message': self.SUCCESS_MESSAGE.format(pin)}
-            )
+            play_buzzer(pin, stream, high_time)
+            
+            response = {'message': self.SUCCESS_MESSAGE.format(pin)}
+            return response
         except:
             return self.error_response()
 
