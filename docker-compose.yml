@@ -1,0 +1,9 @@
+version: "2"
+services:
+    app:
+      build:
+        context: .
+      devices:
+        - '/dev/gpiomem:/dev/gpiomem'
+      ports:
+        - "1337:8000"
