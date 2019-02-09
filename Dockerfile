@@ -1,11 +1,12 @@
-FROM raspbian/stretch
+FROM arm32v7/python:3.7.2-slim-stretch
+
+WORKDIR /usr/deploy/src
 
 # Setup flask application
-RUN mkdir -p /deploy/src
-COPY src /deploy/src
-RUN pip3 install -r /deploy/src/requirements.txt
-RUN pip3 install gunicorn
-WORKDIR /deploy/src
+COPY src /usr/deploy/src
+RUN pip install --no-cache-dir -r /usr/deploy/src/requirements.txt
+RUN pip install gpiozero
+RUN pip install gunicorn
 
 # Start gunicorn
 CMD ["gunicorn","-w", "4", "-b", "0.0.0.0:8000", "app:app"]

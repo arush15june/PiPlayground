@@ -7,3 +7,21 @@ services:
         - '/dev/gpiomem:/dev/gpiomem'
       ports:
         - "1337:8000"
+      networks:
+        - web_nw
+    nginx:
+      image: "nginx:mainline"
+      volumes:
+        - $PWD/conf.d:/etc/nginx/conf.d
+        - $PWD/docs:/www/data/app/docs
+      environment:
+        - net.ipv6.conf.all.forwarding=1 
+      ports:
+        - "80:80"
+      depends_on:
+        - app
+      networks:
+        - web_nw
+networks:
+  web_nw:
+    driver: bridge

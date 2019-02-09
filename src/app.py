@@ -18,7 +18,7 @@ app.secret_key = 'd4abb98d-5864-4e3b-a845-2c4969f3b9be'
 
 """ Enable CORS """
 cors = CORS(app, 
-            resources={r"/*": {"origins": "*"}},
+            resources={r"/api/*": {"origins": "*"}},
             allow_headers=["Content-Type", "Authorization", "Access-Control-Allow-Credentials"]
         )
 api = Api(app) # API Singleton
@@ -26,7 +26,6 @@ api = Api(app) # API Singleton
 """
     Resources
 """
-
 class PiResource(Resource):
     """
         Abstract Resource for POST actions.
@@ -252,10 +251,10 @@ class BuzzerResource(PinResource):
 """
     Add Resource to API.
 """
-api.add_resource(BlinkResource, '/blink')
-api.add_resource(TemperatureResource, '/temperature')
-api.add_resource(ServoResource, '/servo')
-api.add_resource(BuzzerResource, '/buzzer')
+api.add_resource(BlinkResource, '/api/blink')
+api.add_resource(TemperatureResource, '/api/temperature')
+api.add_resource(ServoResource, '/api/servo')
+api.add_resource(BuzzerResource, '/api/buzzer')
 
 if __name__ == "__main__":
     app.run(debug=True)
