@@ -4,7 +4,7 @@ services:
       build:
         context: .
       working_dir:
-        - /usr/deploy/src
+        - '/usr/deploy/src'
       volumes:
         - 'src:/usr/deploy/src'
       devices:
