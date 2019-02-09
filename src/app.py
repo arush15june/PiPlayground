@@ -32,7 +32,7 @@ class PiResource(Resource):
 
     ERROR_MESSAGE = 'Failure'
     ERROR_STATUS_CODE = 503
-    
+
     def __init__(self, *args, **kwargs):
         self.parser = reqparse.RequestParser()
 
@@ -205,16 +205,16 @@ class BuzzerResource(PinResource):
 
     POST Arguments:
         stream: bitstream to play.
-        high_time: time to keep the buzzer high for. milliseconds, Default = 500
+        high_time: time to keep the buzzer high for. seconds, Default = 0.5
         pin: default = 3
     Example:
-        /servo?bitstream=110101001&pin=14&high_time=500
+        /servo?bitstream=110101001&pin=14&high_time=0.5
 
     """
 
     DEFAULT_PIN = 27
 
-    DEFAULT_HIGH_TIME = 500 # ms
+    DEFAULT_HIGH_TIME = 0.5 # s
 
     SUCCESS_MESSAGE = 'Played bitstream on buzzer at GPIO{}'
     ERROR_MESSAGE = 'Error playing bitstream'
