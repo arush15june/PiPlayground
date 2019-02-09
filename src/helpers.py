@@ -2,8 +2,8 @@
     Helper functions to control GPIO.
 
     Functions:
-        blink(pin, seconds)
-            Blink LED on `pin` for `seconds`
+        blink(pin, time)
+            Blink LED on `pin` for `time` seconds.
         
         read_temperature(pin, units)
             read_temperature from sensor connected to pin `pin` and return in `units` 
@@ -15,7 +15,7 @@
             play the bistream `stream` on the buzzer at `pin` with `high_time` ms between each beep.
 """
 
-def blink(pin, seconds):
+def blink(pin, time):
     pass
 
 def read_temperature(pin, units):
