@@ -257,4 +257,4 @@ api.add_resource(ServoResource, '/api/servo')
 api.add_resource(BuzzerResource, '/api/buzzer')
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
