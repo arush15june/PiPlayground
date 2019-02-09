@@ -5,7 +5,7 @@ services:
         context: .
       working_dir: /usr/deploy/src
       volumes:
-        - 'src:/usr/deploy/src'
+        - src:/usr/deploy/src
       devices:
         - '/dev/gpiomem:/dev/gpiomem'
       ports:
