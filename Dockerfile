@@ -1,9 +1,5 @@
 FROM arm32v7/python:3.7.2-slim-stretch
 
-WORKDIR /usr/deploy/src
-
-# Setup flask application
-COPY src /usr/deploy/src
 RUN pip install --no-cache-dir -r /usr/deploy/src/requirements.txt
 RUN pip install gpiozero
 RUN pip install gunicorn
