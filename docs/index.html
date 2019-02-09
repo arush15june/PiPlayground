@@ -82,8 +82,15 @@
 <body class='bg-light'>
 
     
-    <div style='overflow-x:hidden' class='text-center pt-2'>
-        <h1 class='font-weight-bold'>PiPlayground</h1>
+    <div class='row'>
+        <div class='col text-center'>
+            <h1 class='font-weight-bold'>PiPlayground</h1>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col text-center'> 
+            <span>API URL</span> <input type='text' name='api_url' id='apiURLInput' style='min-width:250px' onChange='modifyAPIURL(this)' />
+        </div>
     </div>
 
     <div class='row mr-3 ml-3'>
@@ -207,12 +214,21 @@
 
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
     <script>
-    API_URL = 'http://localhost:5000'
+    let API_URL = 'http://localhost:5000'
 
-    BLINK_URI = '/blink'
-    TEMP_URI = '/temperature'
-    SERVO_URI = '/servo'
-    BUZZ_URI = '/buzzer'
+    const setAPIURLInput = function(url) {
+        document.querySelector('#apiURLInput').value = url
+    }
+    setAPIURLInput(API_URL)
+    
+    const modifyAPIURL = function(input) {
+        API_URL = input.value
+    }
+    
+    let BLINK_URI = '/blink'
+    let TEMP_URI = '/temperature'
+    let SERVO_URI = '/servo'
+    let BUZZ_URI = '/buzzer'
 
     // Helper
     const fetchJSON = async function(uri, method, data) {

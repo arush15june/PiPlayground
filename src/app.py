@@ -18,8 +18,7 @@ app.secret_key = 'd4abb98d-5864-4e3b-a845-2c4969f3b9be'
 
 """ Enable CORS """
 cors = CORS(app, 
-            resources={r"/api/*": {"origins": "*"}},
-            allow_headers=["Content-Type", "Authorization", "Access-Control-Allow-Credentials"]
+            resources={r"/api/*": {"origins": "*"}}
         )
 api = Api(app) # API Singleton
 
