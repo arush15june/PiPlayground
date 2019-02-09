@@ -29,10 +29,12 @@ class PiResource(Resource):
     """
         Abstract Resource for POST actions.
     """
-    parser = reqparse.RequestParser()
 
     ERROR_MESSAGE = 'Failure'
     ERROR_STATUS_CODE = 503
+    
+    def __init__(self, *args, **kwargs):
+        self.parser = reqparse.RequestParser()
 
     def post(self):
         args = self.parser.parse_args()
@@ -230,7 +232,6 @@ class BuzzerResource(PinResource):
             raise InvalidStreamError()
         else:
             return stream
-        
         
     def post_action(self, parser_args, *args, **kwargs):
         pin = parser_args.get('pin')
