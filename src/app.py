@@ -28,8 +28,11 @@ api = Api(app) # API Singleton
 class PiResource(Resource):
     """
         Abstract Resource for POST actions.
-    """
 
+        Define new request arguments using self.parser
+        Define POST action by overriding post_action
+    """
+    
     ERROR_MESSAGE = 'Failure'
     ERROR_STATUS_CODE = 503
 
@@ -227,6 +230,9 @@ class BuzzerResource(PinResource):
         self.parser.add_argument('high_time', type=int, default=self.DEFAULT_HIGH_TIME)
         
     def set_stream(self, stream):
+        """
+            Verify if the stream only contains self.VALID_INPUT (0, 1) elements.
+        """
         validity_list = [char in self.VALID_INPUT for char in stream]
         if False in validity_list:
             raise InvalidStreamError()
